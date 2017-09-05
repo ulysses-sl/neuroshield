@@ -5,15 +5,10 @@ The NeuroShield is an evaluation board featuring one NM500 chip ready to interfa
 Library for Arduino
 ----------------
 
-1. Download `neuroshield-master.zip <https://github.com/nepes-ai/neuroshield.git>`_
+1. Download [neuroshield-master.zip](https://github.com/nepes-ai/neuroshield.git)
 2. Extract ZIP archive
 3. Find NeuroShield directory and compress it into ZIP file
-4. Install library into your Arduino IDE (`How to install a Library <https://www.arduino.cc/en/Guide/Libraries>`_
-
--   [NeuroShield library](https://github.com/nepes-ai/neuroshield/tree/master/neuroshield-arduino/lib/NeuroShield/src)
--   [NeuroShield_SimpleScript](https://github.com/nepes-ai/neuroshield/tree/master/neuroshield-arduino/lib/NeuroShield/examples/NeuroShield_SimpleScript)
--   [NeuroShield_andIMU](https://github.com/nepes-ai/neuroshield/tree/master/neuroshield-arduino/lib/NeuroShield/examples/NeuroShield_andIMU)
-
+4. Install library into your Arduino IDE ([How to install a Library](https://www.arduino.cc/en/Guide/Libraries)
 
 Library for mbed
 ----------------
