@@ -1,6 +1,7 @@
 # NeuroShield
 
-The NeuroShield is an evaluation board featuring one NM500 chip ready to interface to a FPGA via an 28-pin input/output bus. It has been designed to enable academic and research teams to get a quick perception of the NM500 chip’s simplicity of deployment, speed and low-power consumption
+The NeuroShield is an evaluation board featuring one NM500 chip ready to interface to a FPGA via an 28-pin input/output bus. It has been designed to enable academic and research teams to get a quick perception of the NM500 chip’s simplicity of deployment, speed and low-power consumption.
+
 
 Library for Arduino
 ----------------
@@ -9,6 +10,7 @@ Library for Arduino
 2. Extract ZIP archive
 3. Find `NeuroShield` directory and compress it into ZIP file
 4. Install library into your Arduino IDE ([How to install a Library](https://www.arduino.cc/en/Guide/Libraries))
+
 
 Library for mbed
 ----------------
