@@ -7,13 +7,13 @@ Library for Arduino
 
 1. Download [neuroshield-master.zip](https://github.com/nepes-ai/neuroshield.git)
 2. Extract ZIP archive
-3. Find NeuroShield directory and compress it into ZIP file
+3. Find `NeuroShield` directory and compress it into ZIP file
 4. Install library into your Arduino IDE ([How to install a Library](https://www.arduino.cc/en/Guide/Libraries))
 
 Library for mbed
 ----------------
 
-Tested with 
+This library is tested on a NUCLEO-F103RB, NUCLEO-F446RE, NUCLEO-F746ZG
 
 -   [NeuroShield library](https://developer.mbed.org/teams/NM500/code/NeuroShield/)
 -   [NeuroShield_SimpleScript](https://developer.mbed.org/teams/NM500/code/NeuroShield_SimpleScript/)
