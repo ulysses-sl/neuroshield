@@ -20,7 +20,7 @@ Library for Arduino
 Library for mbed
 ----------------
 
-This library is tested on a NUCLEO-F103RB, NUCLEO-F446RE, NUCLEO-F746ZG
+This library is tested on NUCLEO-F103RB, NUCLEO-F446RE, NUCLEO-F746ZG
 
 -   [NeuroShield library](https://developer.mbed.org/teams/NM500/code/NeuroShield/)
 -   [NeuroShield_SimpleScript](https://developer.mbed.org/teams/NM500/code/NeuroShield_SimpleScript/)
