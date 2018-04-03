@@ -5,7 +5,7 @@ The NeuroShield is an evaluation board featuring one NM500 chip ready to interfa
 
 User Manual
 ----------------
--   [NeuroShield User Manual](https://github.com/nepes-ai/neuroshield/blob/master/UserManual_NeuroShield_v1.0.4.pdf)
+-   [NeuroShield User Manual](https://github.com/nepes-ai/neuroshield/blob/master/UserManual_NeuroShield.pdf)
 
 
 Library for Arduino
