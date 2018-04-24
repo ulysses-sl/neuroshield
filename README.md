@@ -16,8 +16,10 @@ Library for Arduino
 3. Find `NeuroShield` directory and compress it into ZIP file
 4. Install library into your Arduino IDE ([How to install a Library](https://www.arduino.cc/en/Guide/Libraries))
 
+
 For Accelerometer + Gyro Sensor
 -   [MPU6050 Library](https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/MPU6050)
+
 
 Library for mbed
 ----------------
