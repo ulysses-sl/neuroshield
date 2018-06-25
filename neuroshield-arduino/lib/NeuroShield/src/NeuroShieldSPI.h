@@ -31,6 +31,15 @@
  *
  */
 
+/*
+ * Revision History (v1.1.4)
+ * 2018/06/22    v1.1.4    Minor changes
+ * 2018/01/03    v1.1.3    Add burst-mode read
+ * 2017/12/20    v1.1.2    Modify the structure of neurondata
+ * 2017/12/11    v1.1.1    Add Powersave command and Minor changes to the library
+ * 2017/08/17    v1.0.0    First Release
+ */
+
 #ifndef _NEUROSHIELDSPI_H
 #define _NEUROSHIELDSPI_H
 
@@ -50,8 +59,10 @@ class NeuroShieldSPI
 		bool connect(uint8_t slave_select);
 		
 		uint16_t read(uint8_t reg);
+		void readVector16(uint16_t* data, uint16_t size);
 		void write(uint8_t reg, uint16_t data);
-		uint16_t writeVector(uint8_t reg, uint8_t* data, uint16_t size);
+		uint16_t writeVector(uint8_t* data, uint16_t size);
+		uint16_t writeVector16(uint16_t* data, uint16_t size);
 		
 		uint16_t version();
 		void reset();

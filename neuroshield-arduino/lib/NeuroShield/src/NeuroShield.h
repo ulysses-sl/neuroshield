@@ -31,6 +31,15 @@
  *
  */
 
+/*
+ * Revision History (v1.1.4)
+ * 2018/06/22    v1.1.4    Minor changes
+ * 2018/01/03    v1.1.3    Add burst-mode read
+ * 2017/12/20    v1.1.2    Modify the structure of neurondata
+ * 2017/12/11    v1.1.1    Add Powersave command and Minor changes to the library
+ * 2017/08/17    v1.0.0    First Release
+ */
+
 #ifndef _NEUROSHIELD_H
 #define _NEUROSHIELD_H
 
@@ -60,6 +69,8 @@ extern "C" {
 #define NM_FORGET		0x0F
 
 #define NEURON_SIZE 	256		// memory capacity of each neuron in byte
+
+#define POWERSAVE		spi.write(NM_POWERSAVE, 1)
 
 #define ARDUINO_CON		5		// SPI_SEL
 #define ARDUINO_SD_CS	6		// SDCARD_SSn
@@ -114,10 +125,12 @@ class NeuroShield
 		uint16_t classify(uint8_t vector[], uint16_t length, uint16_t* distance, uint16_t* category, uint16_t* nid);
 		uint16_t classify(uint8_t vector[], uint16_t length, uint16_t k, uint16_t distance[], uint16_t category[], uint16_t nid[]);
 		
-		void readNeuron(uint16_t nid, uint8_t model[], uint16_t* ncr, uint16_t* aif, uint16_t* cat);
-		void readNeuron(uint16_t nid, uint8_t nuerons[]);
-		uint16_t readNeurons(uint8_t neurons[]);
-		uint16_t writeNeurons(uint8_t neurons[]);
+		void readNeuron(uint16_t nid, uint16_t model[], uint16_t* ncr, uint16_t* aif, uint16_t* cat);
+		void readNeuron(uint16_t nid, uint16_t nuerons[]);
+		uint16_t readNeurons(uint16_t neurons[]);
+		void readCompVector(uint16_t* data, uint16_t size);
+		void writeNeurons(uint16_t neurons[], uint16_t ncount);
+		void writeCompVector(uint16_t* data, uint16_t size);
 		
 		uint16_t testCommand(uint8_t read_write, uint8_t reg, uint16_t data);
 		
@@ -126,5 +139,8 @@ class NeuroShield
 		void ledSelect(uint8_t data);
 		
 		uint16_t total_neurons;
+
+	private:
+		uint16_t support_burst_read = 0;
 };
 #endif

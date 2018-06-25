@@ -1,8 +1,11 @@
 /******************************************************************************
- *  NM500 NeuroSheild Board SimpleScript
+ *  NM500 NeuroShield Board SimpleScript
  *  Simple Test Script to understand how the neurons learn and recognize
- *  revision 1.0, 8/18, 2017
+ *  revision 1.1.3, 01/03, 2018
  *  Copyright (c) 2017 nepes inc.
+ *  
+ *  Please use the NeuroShield library v1.1.3 or later
+ *  https://github.com/nepes-ai/neuroshield
  ******************************************************************************/
 
 #include <NeuroShield.h>
@@ -18,14 +21,26 @@ uint8_t value = 11;
 uint8_t vector[VECTOR_LENGTH];
 uint16_t ncr, aif, cat, dist, nid, nsr, ncount, minif, response_nbr, norm_lsup = 0;
 uint16_t dists[READ_COUNT], cats[READ_COUNT], nids[READ_COUNT];
+uint16_t fpga_version;
 int i, j;
 
 void setup() {
   Serial.begin(9600);
   while (!Serial);    // wait for the serial port to open
-  Serial. print("\n#### NM500 NeuroShield Board ####\n");
-
+  
   if (hnn.begin(NM500_SPI_SS) != 0) {
+    fpga_version = hnn.fpgaVersion();
+    if ((fpga_version & 0xFF00) == 0x0000) {
+      Serial.print("\n#### NeuroShield Board");
+    }
+    else if ((fpga_version & 0xFF00) == 0x0100) {
+      Serial.print("\n#### Prodigy Board");
+    }
+    else {
+      Serial.print("\n#### Unknown Board");
+    }
+    Serial.print(" (Board v"); Serial.print((fpga_version >> 4) & 0x000F); Serial.print(".0");
+    Serial.print(" / FPGA v"); Serial.print(fpga_version & 0x000F); Serial.print(".0)"); Serial.print(" ####\n");
     Serial.print("\nNM500 is initialized!");
     Serial.print("\nThere are "); Serial.print(hnn.total_neurons); Serial.print(" neurons\n");
   }
@@ -52,10 +67,10 @@ void setup() {
   ncount = hnn.learn(vector, VECTOR_LENGTH, 100);
   // display the content of the committed neurons
   Serial.print("\nDisplay the neurons, count="); Serial.print(ncount);
-  uint8_t model[NEURON_SIZE];
-  for (i = 0; i < ncount; i++) {
+  uint16_t model[NEURON_SIZE];
+  for (i = 1; i <= ncount; i++) {
       hnn.readNeuron(i, model, &ncr, &aif, &cat);
-      Serial.print("\nneuron#"); Serial.print(i + 1); Serial.print("\tmodel=");
+      Serial.print("\nneuron#"); Serial.print(i); Serial.print("\tmodel=");
       for (j = 0; j < VECTOR_LENGTH; j++) {
         Serial.print(model[j]); Serial.print(", ");
       }
@@ -100,9 +115,9 @@ void setup() {
   ncount = hnn.learn(vector, VECTOR_LENGTH, 100);
   // display the content of the committed neurons
   Serial.print("\nDisplay the neurons, count="); Serial.print(ncount);
-  for (i = 0; i < ncount; i++) {
+  for (i = 1; i <= ncount; i++) {
       hnn.readNeuron(i, model, &ncr, &aif, &cat);
-      Serial.print("\nneuron#"); Serial.print(i + 1); Serial.print("\tmodel=");
+      Serial.print("\nneuron#"); Serial.print(i); Serial.print("\tmodel=");
       for (j = 0; j < VECTOR_LENGTH; j++) {
         Serial.print(model[j]); Serial.print(", ");
       }
@@ -118,9 +133,9 @@ void setup() {
   ncount = hnn.learn(vector, VECTOR_LENGTH, 77);
   // display the content of the committed neurons
   Serial.print("\nDisplay the neurons, count="); Serial.print(ncount);
-  for (i = 0; i < ncount; i++) {
+  for (i = 1; i <= ncount; i++) {
       hnn.readNeuron(i, model, &ncr, &aif, &cat);
-      Serial.print("\nneuron#"); Serial.print(i + 1); Serial.print("\tmodel=");
+      Serial.print("\nneuron#"); Serial.print(i); Serial.print("\tmodel=");
       for (j = 0; j < VECTOR_LENGTH; j++) {
         Serial.print(model[j]); Serial.print(", ");
       }
@@ -138,9 +153,9 @@ void setup() {
   hnn.setContext(1);
   // display the content of the committed neurons
   Serial.print("\nDisplay the neurons, count="); Serial.print(ncount);
-  for (i = 0; i < ncount; i++) {
+  for (i = 1; i <= ncount; i++) {
       hnn.readNeuron(i, model, &ncr, &aif, &cat);
-      Serial.print("\nneuron#"); Serial.print(i + 1); Serial.print("\tmodel=");
+      Serial.print("\nneuron#"); Serial.print(i); Serial.print("\tmodel=");
       for (j = 0; j < VECTOR_LENGTH; j++) {
         Serial.print(model[j]); Serial.print(", ");
       }

@@ -1,7 +1,14 @@
 /******************************************************************************
- *  NM500 NeuroSheild Board and mpu6050 imu Test example
- *  revision 1.0, 8/18, 2017
+ *  NM500 NeuroShield Board and mpu6050 imu Test example
+ *  revision 1.1.3, 01/03, 2018
  *  Copyright (c) 2017 nepes inc.
+ *  
+ *  Please use the NeuroShield library v1.1.3 or later
+ *  https://github.com/nepes-ai/neuroshield
+ * 
+ *  Dependencies
+ *  https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/MPU6050
+ *  https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/I2Cdev
  ******************************************************************************/
 
 #include <Wire.h>
@@ -26,6 +33,7 @@ uint8_t learn_cat = 0;     // category to learn
 uint8_t prev_cat = 0;  // previously recognized category
 uint16_t dist, cat, nid, nsr, ncount;  // response from the neurons
 uint16_t prev_ncount = 0;
+uint16_t fpga_version;
 
 int16_t min_a = 0xFFFF, max_a = 0, min_g = 0xFFFF, max_g = 0, da = 0, dg = 0;   // reset, or not, at each feature extraction
 
@@ -39,15 +47,23 @@ void setup()
   // serial initialize
   Serial.begin(9600);
   while (!Serial);
-  Serial.print("\n#### NM500 NeuroShield Board ####\n");
-
+  
   // NM500 initialize
   Serial.print("\nStart NM500 initialization...");
   if (hnn.begin(NM500_SPI_SS) != 0) {
-    hnn.forget(DEFAULT_MAXIF);    // set a conservative Max Influence Field prior to learning
-    Serial.print("\n  NM500 is initialized! (MaxIF = ");
-    Serial.print(DEFAULT_MAXIF);
-    Serial.print(")");
+    fpga_version = hnn.fpgaVersion();
+    if ((fpga_version & 0xFF00) == 0x0000) {
+      Serial.print("\n  NeuroShield Board");
+    }
+    else if ((fpga_version & 0xFF00) == 0x0100) {
+      Serial.print("\n  Prodigy Board");
+    }
+    else {
+      Serial.print("\n  Unknown Board");
+    }
+    Serial.print(" (Board v"); Serial.print((fpga_version >> 4) & 0x000F); Serial.print(".0");
+    Serial.print(" / FPGA v"); Serial.print(fpga_version & 0x000F); Serial.print(".0)");
+    Serial.print("\n  NM500 is initialized!");
     Serial.print("\n  There are "); Serial.print(hnn.total_neurons); Serial.print(" neurons");
   }
   else {
@@ -79,7 +95,7 @@ void setup()
   
   // wait for ready
   Serial.print("\n  About to calibrate. Make sure your board is stable and upright");
-  Serial.print("\n  Send any character to start calibraion");
+  Serial.print("\n  Send any character to start calibration");
   while (Serial.available() && Serial.read()); // empty buffer
   while (!Serial.available()){
     Serial.print(".");

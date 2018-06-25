@@ -31,11 +31,19 @@
  *
  */
 
+/*
+ * Revision History (v1.1.4)
+ * 2018/06/22    v1.1.4    Minor changes
+ * 2018/01/03    v1.1.3    Add burst-mode read
+ * 2017/12/20    v1.1.2    Modify the structure of neurondata
+ * 2017/12/11    v1.1.1    Add Powersave command and Minor changes to the library
+ * 2017/08/17    v1.0.0    First Release
+ */
+
 #include <NeuroShield.h>
 #include <NeuroShieldSPI.h>
 #include <SPI.h>
 
-using namespace std;
 extern "C" {
   #include <stdint.h>
 }
@@ -105,6 +113,26 @@ uint16_t NeuroShieldSPI::read(uint8_t reg)
 	return(data);
 }
 
+void NeuroShieldSPI::readVector16(uint16_t* data, uint16_t size)
+{
+	SPI.setClockDivider(NM500_SPI_CLK_DIV);
+	digitalWrite(shield_ss, LOW);
+	SPI.transfer(1);								// Dummy for ID
+	SPI.transfer((uint8_t)module_nm500);			// address (4-byte)
+	SPI.transfer(0);
+	SPI.transfer(0);
+	SPI.transfer(NM_COMP);
+	SPI.transfer(0);								// word size (3-byte)
+	SPI.transfer((uint8_t)((size >> 8) & 0x00FF));
+	SPI.transfer((uint8_t)(size & 0x00FF));
+	for (int i = 0; i < size; i++) {
+		*data = SPI.transfer(0);					// Send 0 to push upper data out
+		*data = (*data << 8) + SPI.transfer(0);		// Send 0 to push lower data out
+		data++;
+	}
+	digitalWrite(shield_ss, HIGH);
+}
+
 // ----------------------------------------------------------------
 // SPI Write the register of a given module (module + reg = addr)
 // ----------------------------------------------------------------
@@ -134,9 +162,9 @@ void NeuroShieldSPI::write(uint8_t reg, uint16_t data)
 // ----------------------------------------------------------------
 // SPI Write burst mode at COMP register
 // ----------------------------------------------------------------
-uint16_t NeuroShieldSPI::writeVector(uint8_t reg, uint8_t* data, uint16_t size)
+uint16_t NeuroShieldSPI::writeVector(uint8_t* data, uint16_t size)
 {
-	if ((reg != NM_COMP) || (size > 255))
+	if (size > NEURON_SIZE)							// to use SR-mode
 		return(0);
 	
 	SPI.setClockDivider(NM500_SPI_CLK_DIV);
@@ -145,13 +173,37 @@ uint16_t NeuroShieldSPI::writeVector(uint8_t reg, uint8_t* data, uint16_t size)
 	SPI.transfer((uint8_t)(module_nm500 + 0x80));	// module and write flag
 	SPI.transfer(0);								
 	SPI.transfer(0);
-	SPI.transfer(reg);
+	SPI.transfer(NM_COMP);
 	SPI.transfer(0);								// word size (3-byte)
-	SPI.transfer(0);
-	SPI.transfer((uint8_t)size);					// 0 ~ 255 byte
+	SPI.transfer((uint8_t)((size >> 8) & 0x00FF));
+	SPI.transfer((uint8_t)(size & 0x00FF));
 	for (int i = 0; i < size; i++) {
 		SPI.transfer(0x00);							// COMP' upper data = 0x00
 		SPI.transfer((uint8_t)(*data));				// lower data
+		data++;
+	}
+	digitalWrite(shield_ss, HIGH);
+	return(size);
+}
+
+uint16_t NeuroShieldSPI::writeVector16(uint16_t* data, uint16_t size)
+{
+	if (size > NEURON_SIZE)							// to use SR-mode
+		return(0);
+
+	SPI.setClockDivider(NM500_SPI_CLK_DIV);
+	digitalWrite(shield_ss, LOW);
+	SPI.transfer(1);								// Dummy for ID
+	SPI.transfer((uint8_t)(module_nm500 + 0x80));	// module and write flag
+	SPI.transfer(0);
+	SPI.transfer(0);
+	SPI.transfer(NM_COMP);
+	SPI.transfer(0);								// word size (3-byte)
+	SPI.transfer((uint8_t)((size >> 8) & 0x00FF));
+	SPI.transfer((uint8_t)(size & 0x00FF));
+	for (int i = 0; i < size; i++) {
+		SPI.transfer(0x00);							// COMP' upper data = 0x00
+		SPI.transfer((uint8_t)((*data) & 0x00FF));	// lower data
 		data++;
 	}
 	digitalWrite(shield_ss, HIGH);
@@ -166,7 +218,7 @@ uint16_t NeuroShieldSPI::version()
 	SPI.setClockDivider(NM500_SPI_CLK_DIV);
 	digitalWrite(shield_ss, LOW);
 	SPI.transfer(1);						// Dummy for ID
-	SPI.transfer((uint8_t)module_fpga);				// address (4-byte)
+	SPI.transfer((uint8_t)module_fpga);		// address (4-byte)
 	SPI.transfer(0);
 	SPI.transfer(0);
 	SPI.transfer(1);						// version check : 0x01
@@ -187,7 +239,7 @@ void NeuroShieldSPI::reset()
 	SPI.setClockDivider(NM500_SPI_CLK_DIV);
 	digitalWrite(shield_ss, LOW);
 	SPI.transfer(1);									// Dummy for ID
-	SPI.transfer((uint8_t)(module_fpga + 0x80));	// address (4-byte)
+	SPI.transfer((uint8_t)(module_fpga + 0x80));		// address (4-byte)
 	SPI.transfer(0);
 	SPI.transfer(0);
 	SPI.transfer(2);									// nm500 sw reset : 0x02
@@ -207,7 +259,7 @@ void NeuroShieldSPI::ledSelect(uint8_t data)
 	SPI.setClockDivider(NM500_SPI_CLK_DIV);
 	digitalWrite(shield_ss, LOW);
 	SPI.transfer(1);									// Dummy for ID
-	SPI.transfer((uint8_t)(module_led + 0x80));	// address (4-byte)
+	SPI.transfer((uint8_t)(module_led + 0x80));			// address (4-byte)
 	SPI.transfer(0);
 	SPI.transfer(0);
 	SPI.transfer(data);									// led scenario select
