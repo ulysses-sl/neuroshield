@@ -5,7 +5,7 @@ The NeuroShield is an evaluation board featuring one NM500 chip ready to interfa
 
 User Manual
 ----------------
--   [NeuroShield User Manual](https://github.com/nepes-ai/neuroshield/blob/master/UserManual_NeuroShield_v1.0.4.pdf)
+-   [NeuroShield User Manual](https://github.com/nepes-ai/neuroshield/blob/master/UserManual_NeuroShield.pdf)
 
 
 Library for Arduino
@@ -15,6 +15,10 @@ Library for Arduino
 2. Extract ZIP archive
 3. Find `NeuroShield` directory and compress it into ZIP file
 4. Install library into your Arduino IDE ([How to install a Library](https://www.arduino.cc/en/Guide/Libraries))
+
+
+For Accelerometer + Gyro Sensor
+-   [MPU6050 Library](https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/MPU6050)
 
 
 Library for mbed
