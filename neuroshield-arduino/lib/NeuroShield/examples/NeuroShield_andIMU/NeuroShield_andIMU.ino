@@ -3,7 +3,7 @@
  *  revision 1.1.3, 01/03, 2018
  *  Copyright (c) 2017 nepes inc.
  *  
- *  Please use the NeuroShield library v1.1.3 or later
+ *  Please use the NeuroShield library v1.1.3 or later.
  *  https://github.com/nepes-ai/neuroshield
  * 
  *  Dependencies
@@ -15,7 +15,7 @@
 #include <MPU6050.h>
 #include <NeuroShield.h>
 
-// for NM500
+// for NM500 
 #define MOTION_REPEAT_COUNT 3  // number of samples to assemble a vector
 #define MOTION_SIGNAL_COUNT 8  // d_ax, d_ay, d_az, d_gx, d_gy, d_gz, da, dg
 #define MOTION_CAPTURE_COUNT 20

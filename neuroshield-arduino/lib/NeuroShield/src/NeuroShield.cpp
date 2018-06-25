@@ -61,7 +61,7 @@ NeuroShield::NeuroShield() {
 // ------------------------------------------------------------
 uint16_t NeuroShield::begin()
 {
-	bool read_value = spi.connect(ARDUINO_SS);	// default CS
+	bool read_value = spi.connect(ARDUINO_SS);	// default CS.
 
 	if (read_value != 1) {
 		return(0);

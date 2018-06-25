@@ -49,7 +49,7 @@ extern "C" {
 }
 
 // ----------------------------------------------------------------
-//    Constructor to the class ShieldSPI
+//    Constructor to the class ShieldSPI.
 // ----------------------------------------------------------------
 NeuroShieldSPI::NeuroShieldSPI(){	
 }

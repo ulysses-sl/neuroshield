@@ -68,7 +68,7 @@ extern "C" {
 #define NM_NCOUNT		0x0F
 #define NM_FORGET		0x0F
 
-#define NEURON_SIZE 	256		// memory capacity of each neuron in byte
+#define NEURON_SIZE 	256		// memory capacity of each neuron in byte.
 
 #define POWERSAVE		spi.write(NM_POWERSAVE, 1)
 

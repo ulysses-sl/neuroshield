@@ -4,8 +4,8 @@
  *  revision 1.1.3, 01/03, 2018
  *  Copyright (c) 2017 nepes inc.
  *  
- *  Please use the NeuroShield library v1.1.3 or later
- *  https://github.com/nepes-ai/neuroshield
+ *  Please use the NeuroShield library v1.1.3 or later.
+ *  https://github.com/nepes-ai/neuroshield 
  ******************************************************************************/
 
 #include <NeuroShield.h>

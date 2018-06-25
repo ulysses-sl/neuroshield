@@ -43,7 +43,7 @@
 #ifndef _NEUROSHIELDSPI_H
 #define _NEUROSHIELDSPI_H
 
-#define NM500_SPI_CLK_DIV	SPI_CLOCK_DIV8	// spi clock : 16MHz / 8 = 2MHz
+#define NM500_SPI_CLK_DIV	SPI_CLOCK_DIV8	// spi clock : 16MHz / 8 = 2MHz.
 #define NM500_SPI_CLK		2000000
 
 extern "C" {
