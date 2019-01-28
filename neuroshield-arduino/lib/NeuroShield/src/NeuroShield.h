@@ -148,7 +148,7 @@ class NeuroShield
 		// Access to SD card
 		//-----------------------------------
 		bool SD_detected = false;
-		// compatible with the NeuroMem knowledge Builder knowledge files
+		// compatible with the NeuroMem knowledge Studio knowledge files (.knf)
 		int saveKnowledgeToSDcard(char* filename);
 		int loadKnowledgeFromSDcard(char* filename);
 
