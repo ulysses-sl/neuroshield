@@ -32,7 +32,8 @@
  */
 
 /*
- * Revision History (v1.1.4)
+ * Revision History (v1.1.5)
+ * 2019/01/25    v1.1.5    Minor changes
  * 2018/06/22    v1.1.4    Minor changes
  * 2018/01/03    v1.1.3    Add burst-mode read
  * 2017/12/20    v1.1.2    Modify the structure of neurondata
@@ -43,9 +44,14 @@
 #include <NeuroShield.h>
 #include <NeuroShieldSPI.h>
 
+#include <SdFat.h>
+
 extern "C" {
 	#include <stdint.h>
 }
+
+// minsook Add
+SdFat SD;
 
 NeuroShieldSPI spi;
 
@@ -75,6 +81,13 @@ uint16_t NeuroShield::begin()
 			support_burst_read = 1;
 
 		return(total_neurons);
+	}
+
+	if (SD.begin(ARDUINO_SD_CS)) {
+		SD_detected = true;
+	} else {
+		// error
+		return(300);
 	}
 }
 uint16_t NeuroShield::begin(uint8_t slaveSelect)
@@ -711,4 +724,100 @@ void NeuroShield::nm500Reset()
 void NeuroShield::ledSelect(uint8_t data)
 {
 	spi.ledSelect(data);
+}
+
+// --------------------------------------------------------
+// Save the knowledge of the neurons to a knowledge file
+// saved in a format compatible with the NeuroMem API
+// --------------------------------------------------------
+int NeuroShield::saveKnowledgeToSDcard(char* filename)
+{
+	uint16_t ncr, aif, minif, cat = 0;
+	if (!SD_detected)
+	{
+		SD_detected = SD.begin(ARDUINO_SD_CS);
+	}
+	if (!SD_detected) return(1);
+	if (SD.exists(filename)) SD.remove(filename);
+	File SDfile = SD.open(filename, (O_READ | O_WRITE | O_CREAT | O_TRUNC));
+	if (!SDfile) return(2);
+
+	uint16_t header[4]{ KN_FORMAT, 0,0,0 };
+	header[1] = NEURON_SIZE;
+	int ncount = getNcount();
+	header[2] = ncount;
+	SDfile.write(header, ((sizeof(uint16_t)) * 4));
+
+	uint16_t data, temp_nsr = getNsr();
+	setNsr(0x0010);
+	resetChain();
+	for (int i = 1; i <= ncount; i++) {
+		ncr = getNcr();
+		SDfile.write(&ncr, sizeof(uint16_t));
+		for (int j = 0; j < NEURON_SIZE; j++) {
+			data = getComp();
+			SDfile.write(&data, sizeof(uint16_t));
+		}
+		aif = getAif();
+		SDfile.write(&aif, sizeof(uint16_t));
+		minif = getMinif();
+		SDfile.write(&minif, sizeof(uint16_t));
+		cat = getCat();
+		SDfile.write(&cat, sizeof(uint16_t));
+	}
+	setNsr(temp_nsr);
+	setPowerSave();
+
+	SDfile.close();
+	return(0);
+}
+// --------------------------------------------------------
+// Load the neurons with a knowledge stored in a knowledge file
+// saved in a format compatible with the NeuroMem API
+// --------------------------------------------------------
+int NeuroShield::loadKnowledgeFromSDcard(char* filename)
+{
+	if (!SD_detected)
+	{
+		SD_detected = SD.begin(ARDUINO_SD_CS);
+	}
+	if (!SD_detected) return(1);
+	if (!SD.exists(filename)) return(2);
+	File SDfile = SD.open(filename, FILE_READ);
+	if (!SDfile) return(3);
+
+	uint16_t header[4];
+	SDfile.read(header, ((sizeof(uint16_t)) * 4));
+	if (header[0] < KN_FORMAT) return(4);
+	if (header[1] > NEURON_SIZE) return(5);
+	int ncount = 0;
+	if (header[2] > total_neurons)return(6);
+	else ncount = header[2]; // incompatible neuron size
+	ncount = header[2];
+
+	uint16_t data, temp_nsr = getNsr();
+	forget();
+	setNsr(0x0010);
+	resetChain();
+	while (SDfile.available()) {
+		for (int i = 1; i <= ncount; i++) {
+			SDfile.read(&data, sizeof(uint16_t));
+			setNcr(data);
+			for (int j = 0; j < NEURON_SIZE; j++) {
+				SDfile.read(&data, sizeof(uint16_t));
+				setComp(data);
+			}
+			SDfile.read(&data, sizeof(uint16_t));
+			setAif(data);
+			SDfile.read(&data, sizeof(uint16_t));
+			setMinif(data);
+			SDfile.read(&data, sizeof(uint16_t));
+			setCat(data);
+		}
+		break;
+	}
+	setNsr(temp_nsr);
+
+	SDfile.close();
+	return(0);
 }
