@@ -50,7 +50,6 @@ extern "C" {
 	#include <stdint.h>
 }
 
-// minsook Add
 SdFat SD;
 
 NeuroShieldSPI spi;

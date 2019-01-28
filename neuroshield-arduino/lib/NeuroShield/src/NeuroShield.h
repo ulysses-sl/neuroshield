@@ -50,7 +50,7 @@ extern "C" {
 	#include <stdint.h>
 }
 
-#define MOD_NM			0x01 // minsook add
+#define MOD_NM			0x01
 #define NM_NCR			0x00
 #define NM_COMP			0x01
 #define NM_LCOMP		0x02
@@ -78,7 +78,7 @@ extern "C" {
 #define ARDUINO_SD_CS	6		// SDCARD_SSn
 #define ARDUINO_SS		7		// NM500_SSn
 
-#define KN_FORMAT		0x1704	// minsook add
+#define KN_FORMAT		0x1704	// Magic Number
 
 class NeuroShield
 {
@@ -144,11 +144,9 @@ class NeuroShield
 		
 		uint16_t total_neurons;
 
-		//  minsook add
 		//-----------------------------------
 		// Access to SD card
 		//-----------------------------------
-		//int SD_select = 6; // NeuroMemAI.cpp - #define SD_CS_NEUROSHIELD 6
 		bool SD_detected = false;
 		// compatible with the NeuroMem knowledge Builder knowledge files
 		int saveKnowledgeToSDcard(char* filename);
