@@ -32,7 +32,8 @@
  */
 
 /*
- * Revision History (v1.1.4)
+ * Revision History (v1.1.5)
+ * 2019/01/25    v1.1.5    Minor changes
  * 2018/06/22    v1.1.4    Minor changes
  * 2018/01/03    v1.1.3    Add burst-mode read
  * 2017/12/20    v1.1.2    Modify the structure of neurondata
@@ -49,6 +50,7 @@ extern "C" {
 	#include <stdint.h>
 }
 
+#define MOD_NM			0x01
 #define NM_NCR			0x00
 #define NM_COMP			0x01
 #define NM_LCOMP		0x02
@@ -76,10 +78,12 @@ extern "C" {
 #define ARDUINO_SD_CS	6		// SDCARD_SSn
 #define ARDUINO_SS		7		// NM500_SSn
 
+#define KN_FORMAT		0x1704	// Magic Number
+
 class NeuroShield
 {
 	public:
-	
+
 		NeuroShield();
 		uint16_t begin();
 		uint16_t begin(uint8_t slave_select);
@@ -139,6 +143,14 @@ class NeuroShield
 		void ledSelect(uint8_t data);
 		
 		uint16_t total_neurons;
+
+		//-----------------------------------
+		// Access to SD card
+		//-----------------------------------
+		bool SD_detected = false;
+		// compatible with the NeuroMem knowledge Studio knowledge files (.knf)
+		int saveKnowledgeToSDcard(char* filename);
+		int loadKnowledgeFromSDcard(char* filename);
 
 	private:
 		uint16_t support_burst_read = 0;
